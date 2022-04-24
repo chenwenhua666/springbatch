@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Data
 @TableName("t_order")
 public class Order implements Serializable {
-    @TableId(value = "order_id", type = IdType.INPUT)
+    @TableId
     private Long orderId;
 
     private BigDecimal price;

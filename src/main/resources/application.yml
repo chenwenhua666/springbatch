@@ -79,4 +79,4 @@ spring:
           table-strategy:
             inline:
               sharding-column: order_id
-              algorithm‐expression: t_order_$->{order_id % 2 + 1}
+              algorithm-expression: t_order_$->{order_id % 2 + 1}
