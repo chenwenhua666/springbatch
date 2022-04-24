@@ -66,7 +66,13 @@ spring:
       sql:
         show: true
     datasource:
-      names: ds1,ds2
+      names: ds,ds1,ds2
+      ds:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/user_db?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        username: root
+        password: 123456
       ds1:
         #type: com.zaxxer.hikari.HikariDataSource
         type: com.alibaba.druid.pool.DruidDataSource
@@ -96,3 +102,9 @@ spring:
             inline:
               sharding-column: order_id
               algorithm-expression: t_order_$->{order_id % 2 + 1}
+        t_user:
+          actual-data-nodes: ds.t_user
+          table-strategy:
+            inline:
+              sharding-column: user_id
+              algorithm-expression: t_user
