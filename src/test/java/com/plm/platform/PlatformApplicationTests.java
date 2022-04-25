@@ -81,7 +81,7 @@ class PlatformApplicationTests {
         for (int i = 0; i < 10; i++) {
             User user = new User();
             user.setUsername("username"+i);
-            user.setUserType("web");
+            user.setUserType("app");
             userService.save(user);
         }
     }
