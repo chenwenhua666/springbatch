@@ -3,8 +3,10 @@ package com.plm.platform;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.plm.platform.batch.entity.Dict;
 import com.plm.platform.batch.entity.Order;
 import com.plm.platform.batch.entity.User;
+import com.plm.platform.batch.service.DictService;
 import com.plm.platform.batch.service.OrderService;
 import com.plm.platform.batch.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.baomidou.mybatisplus.core.toolkit.Wrappers.lambdaQuery;
 
@@ -30,6 +34,9 @@ class PlatformApplicationTests {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DictService dictService;
 
     @Test
     void contextLoads() {
@@ -86,6 +93,42 @@ class PlatformApplicationTests {
         ids.add(2L);
         List<User> userList = userService.listByIds(ids);
         log.info("结果={}",userList);
+    }
+
+    @Test
+    public void queryUser2() {
+        List<Map> result = userService.findUserInfoByIds("user_type", Arrays.asList(1L,2L,3L));
+        log.info("结果={}",result);
+    }
+
+    @Test
+    public void testInsertDict() {
+        Dict dict = new Dict();
+        dict.setCode("user_type");
+        dict.setDictKey("-1");
+        dict.setDictValue("用户类型");
+        dict.setSort(1);
+        dictService.save(dict);
+        Long parentId = dict.getId();
+        Dict dict2 = new Dict();
+        dict2.setParentId(parentId);
+        dict2.setCode("user_type");
+        dict2.setDictKey("1");
+        dict2.setDictValue("app");
+        dict2.setSort(1);
+        dictService.save(dict2);
+        Dict dict3 = new Dict();
+        dict3.setParentId(parentId);
+        dict3.setCode("user_type");
+        dict3.setDictKey("2");
+        dict3.setDictValue("web");
+        dict3.setSort(2);
+        dictService.save(dict3);
+    }
+
+    @Test
+    public void testDeleteDict() {
+        dictService.removeByIds(Arrays.asList(1L,2L,3L));
     }
 
 }

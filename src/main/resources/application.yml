@@ -108,3 +108,6 @@ spring:
             inline:
               sharding-column: user_id
               algorithm-expression: t_user
+      broadcast-tables: t_dict
+
+
