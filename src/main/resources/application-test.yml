@@ -42,58 +42,86 @@ spring:
       sql:
         show: true
     datasource:
-      names: ds,ds-slave1,ds1,ds2
-      ds:
+      names: m0,m1,m2,s0,s1,s2
+      m0:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/user_db?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://127.0.0.1:3306/store_db?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: 123456
-      ds-slave1:
+      s0:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/user_db_s1?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://127.0.0.1:3306/store_db_slave?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: 123456
-      ds1:
-        #type: com.zaxxer.hikari.HikariDataSource
+      m1:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/springbatch1?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://127.0.0.1:3306/product_db_1?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: 123456
-      ds2:
+      s1:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/springbatch2?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://127.0.0.1:3306/product_db_1_slave?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        username: root
+        password: 123456
+      m2:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/product_db_2?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        username: root
+        password: 123456
+      s2:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/product_db_2_slave?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: 123456
     sharding:
-      tables:
-        t_order:
-#          actual-data-nodes: m1.t_order_$->{1..2}
-          actual-data-nodes: ds$->{1..2}.t_order_$->{1..2}
-          key-generator:
-            column: order_id
-            type: SNOWFLAKE
-          database-strategy:
-            inline:
-              sharding-column: user_id
-              algorithm-expression: ds$->{user_id % 2 + 1}
-          table-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: t_order_$->{order_id % 2 + 1}
-        t_user:
-#          actual-data-nodes: ds.t_user
-          actual-data-nodes: ms1.t_user
-          table-strategy:
-            inline:
-              sharding-column: user_id
-              algorithm-expression: t_user
-      broadcast-tables: t_dict
       master-slave-rules:
-        ms1:
-          master-data-source-name: ds
-          slave-data-source-names: ds-slave1
+        ds0:
+          master-data-source-name: m0
+          slave-data-source-names: s0
+        ds1:
+          master-data-source-name: m1
+          slave-data-source-names: s1
+        ds2:
+          master-data-source-name: m2
+          slave-data-source-names: s2
+      default-database-strategy:
+        inline:
+          sharding-column: store_info_id
+          algorithm-expression: ds$->{store_info_id % 2 + 1}
+      broadcast-tables: t_region
+      binding-tables[0]: product_info,product_descript
+      tables:
+        t_region:
+          actual-data-nodes: ds$->{0..2}.t_region
+        store_info:
+          actual-data-nodes: ds$->{0}.store_info
+          table-strategy:
+            inline:
+              sharding-column: id
+              algorithm-expression: store_info
+        product_info:
+          key-generator:
+            column: product_info_id
+            type: SNOWFLAKE
+          actual-data-nodes: ds$->{1..2}.product_info_$->{1..2}
+          table-strategy:
+            inline:
+              sharding-column: product_info_id
+              algorithm-expression: product_info_$->{product_info_id % 2 + 1}
+        product_descript:
+          key-generator:
+            column: id
+            type: SNOWFLAKE
+          actual-data-nodes: ds$->{1..2}.product_descript_$->{1..2}
+          table-strategy:
+            inline:
+              sharding-column: product_info_id
+              algorithm-expression: product_descript_$->{product_info_id % 2 + 1}
+
 

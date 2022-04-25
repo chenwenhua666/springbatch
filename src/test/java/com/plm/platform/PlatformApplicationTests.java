@@ -2,13 +2,10 @@ package com.plm.platform;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.plm.platform.batch.entity.Dict;
-import com.plm.platform.batch.entity.Order;
-import com.plm.platform.batch.entity.User;
-import com.plm.platform.batch.service.DictService;
-import com.plm.platform.batch.service.OrderService;
-import com.plm.platform.batch.service.UserService;
+import com.plm.platform.batch.entity.*;
+import com.plm.platform.batch.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +35,19 @@ class PlatformApplicationTests {
     @Autowired
     private DictService dictService;
 
+    @Autowired
+    private ProductInfoService productInfoService;
+
+    @Autowired
+    private ProductDescriptService productDescriptService;
+
+    @Autowired
+    private RegionService regionService;
+
+    @Autowired
+    private StoreInfoService storeInfoService;
+
+
     @Test
     void contextLoads() {
     }
@@ -60,7 +70,7 @@ class PlatformApplicationTests {
         ids.add(725060320611008512L);
         //ids.add(725017878729850881L);
         List<Order> orderList = orderService.listByIds(ids);
-        log.info("结果={}",orderList);
+        log.info("结果={}", orderList);
     }
 
     @Test
@@ -73,14 +83,14 @@ class PlatformApplicationTests {
         queryWrapper.eq(Order::getUserId, 4L);
 
         List<Order> orderList = orderService.list(queryWrapper);
-        log.info("结果={}",orderList);
+        log.info("结果={}", orderList);
     }
 
     @Test
     public void testInsertUser() {
         for (int i = 0; i < 10; i++) {
             User user = new User();
-            user.setUsername("username"+i);
+            user.setUsername("username" + i);
             user.setUserType("app");
             userService.save(user);
         }
@@ -92,13 +102,13 @@ class PlatformApplicationTests {
         ids.add(1L);
         ids.add(2L);
         List<User> userList = userService.listByIds(ids);
-        log.info("结果={}",userList);
+        log.info("结果={}", userList);
     }
 
     @Test
     public void queryUser2() {
-        List<Map> result = userService.findUserInfoByIds("user_type", Arrays.asList(1L,2L,3L));
-        log.info("结果={}",result);
+        List<Map> result = userService.findUserInfoByIds("user_type", Arrays.asList(1L, 2L, 3L));
+        log.info("结果={}", result);
     }
 
     @Test
@@ -128,7 +138,50 @@ class PlatformApplicationTests {
 
     @Test
     public void testDeleteDict() {
-        dictService.removeByIds(Arrays.asList(1L,2L,3L));
+        dictService.removeByIds(Arrays.asList(1L, 2L, 3L));
+    }
+
+    @Test
+    public void insertProduct() {
+        for (int i = 0; i < 100; i++) {
+            ProductInfo productInfo = new ProductInfo();
+            productInfo.setProductName("商品名" + i);
+            productInfo.setStoreInfoId(1L);
+            productInfo.setSpec("规格");
+            productInfo.setRegionCode("110000");
+            productInfo.setPrice(new BigDecimal(100L));
+            productInfo.setImageUrl("www.baidu.com");
+            productInfoService.save(productInfo);
+            ProductDescript productDescript = new ProductDescript();
+            productDescript.setDescript("商品描述信息" + i);
+            productDescript.setProductInfoId(productInfo.getProductInfoId());
+            productDescript.setStoreInfoId(productInfo.getStoreInfoId());
+            productDescriptService.save(productDescript);
+        }
+    }
+
+    @Test
+    public void findProductDetail() {
+        List<Map> productDetails = productInfoService.findProductDetail(1, 10);
+        log.info("商品详情={}", productDetails);
+    }
+
+    @Test
+    public void findProductDetailByPage() {
+        IPage<Map> productDetails = productInfoService.findProductDetailByPage(2, 10);
+        log.info("分页对象商品详情={},total={},size={}", productDetails.getRecords(),productDetails.getTotal(), productDetails.getSize());
+    }
+
+
+    @Test
+    public void selectProductCount() {
+        log.info("商品count={}", productInfoService.count());
+    }
+
+    @Test
+    public void selectProductGroupList() {
+        List<Map> result = productInfoService.findProductGroupList();
+        log.info("商品count={}", result);
     }
 
 }
