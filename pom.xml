@@ -19,6 +19,7 @@
         <mybatis-plus.dynamic.version>3.3.6</mybatis-plus.dynamic.version>
         <druid.version>1.2.8</druid.version>
         <sharding-jdbc.version>4.1.1</sharding-jdbc.version>
+        <xstream.version>1.4.11.1</xstream.version>
     </properties>
     <dependencies>
         <dependency>
@@ -55,6 +56,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>${xstream.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
