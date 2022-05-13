@@ -22,7 +22,7 @@ public class FirstJobDemo {
 
     @Bean
     public Job firstJob() {
-        return jobBuilderFactory.get("firstJob")
+        return jobBuilderFactory.get("firstJob6")
                 .start(step())
                 .build();
     }
@@ -30,8 +30,13 @@ public class FirstJobDemo {
     private Step step() {
         return stepBuilderFactory.get("step")
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("执行步骤....");
+                    System.out.println("firstJob执行步骤step....");
                     return RepeatStatus.FINISHED;
-                }).build();
+                })
+                //每次项目重新启动都将执行这个Step
+                //.allowStartIfComplete(true)
+                //仅仅运行一次
+                //.startLimit(1)
+                .build();
     }
 }

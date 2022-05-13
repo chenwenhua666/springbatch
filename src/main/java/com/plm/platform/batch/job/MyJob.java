@@ -34,7 +34,9 @@ public class MyJob {
                 .tasklet((stepContribution, chunkContext) -> {
                     StepExecution stepExecution = chunkContext.getStepContext().getStepExecution();
                     Map<String, JobParameter> parameters = stepExecution.getJobParameters().getParameters();
-                    System.out.println(parameters.get("message").getValue());
+                    if (parameters.containsKey("message")) {
+                        System.out.println(parameters.get("message").getValue());
+                    }
                     return RepeatStatus.FINISHED;
                 })
                 .listener(this)
