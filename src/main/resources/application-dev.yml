@@ -1,4 +1,7 @@
 spring:
+  batch:
+    job:
+      enabled: false
   autoconfigure:
     exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
   datasource:

@@ -1,4 +1,7 @@
 server:
+  port: 9088
+  servlet:
+    context-path: /springbatch
   undertow:
     threads:
       # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
@@ -9,9 +12,10 @@ server:
     buffer-size: 1024
     # 是否分配的直接内存
     direct-buffers: true
+
 spring:
   profiles:
-    active: test
+    active: dev
 mybatis-plus:
   type-aliases-package: com.plm.platform.batch.entity
   mapper-locations: classpath:mapper/*.xml
