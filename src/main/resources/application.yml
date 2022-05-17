@@ -16,6 +16,15 @@ server:
 spring:
   profiles:
     active: dev
+  freemarker:
+    cache: false
+    charset: UTF-8
+    suffix: .ftl
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
 mybatis-plus:
   type-aliases-package: com.plm.platform.batch.entity
   mapper-locations: classpath:mapper/*.xml
