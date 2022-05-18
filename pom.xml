@@ -22,7 +22,7 @@
         <sharding-shardingsphere.version>5.1.1</sharding-shardingsphere.version>
         <xstream.version>1.4.11.1</xstream.version>
         <leaf-core.version>1.0.1</leaf-core.version>
-        <curator.version>5.1.0</curator.version>
+        <curator.version>2.6.0</curator.version>
     </properties>
     <dependencies>
         <dependency>

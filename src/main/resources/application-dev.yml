@@ -78,7 +78,10 @@ spring:
           actual-data-nodes: ds$->{1..2}.t_order_$->{1..2}
           key-generator:
             column: order_id
-            type: SNOWFLAKE
+#            type: SNOWFLAKE
+            type: leafSegment
+            props:
+              biz-tag: leaf-segment-test
           database-strategy:
             inline:
               sharding-column: user_id
