@@ -19,9 +19,10 @@
         <mybatis-plus.dynamic.version>3.3.6</mybatis-plus.dynamic.version>
         <druid.version>1.2.8</druid.version>
         <sharding-jdbc.version>4.1.1</sharding-jdbc.version>
+        <sharding-shardingsphere.version>5.1.1</sharding-shardingsphere.version>
         <xstream.version>1.4.11.1</xstream.version>
         <leaf-core.version>1.0.1</leaf-core.version>
-        <curator.version>2.6.0</curator.version>
+        <curator.version>5.1.0</curator.version>
     </properties>
     <dependencies>
         <dependency>
@@ -87,6 +88,13 @@
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
             <version>${sharding-jdbc.version}</version>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>${sharding-shardingsphere.version}</version>
+        </dependency>
+        -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
