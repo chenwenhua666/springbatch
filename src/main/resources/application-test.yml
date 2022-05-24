@@ -108,7 +108,10 @@ spring:
         product_info:
           key-generator:
             column: product_info_id
-            type: SNOWFLAKE
+            #type: SNOWFLAKE
+            type: leafSegment
+            props:
+              biz-tag: leaf-segment-test
           actual-data-nodes: ds$->{1..2}.product_info_$->{1..2}
           table-strategy:
             inline:
