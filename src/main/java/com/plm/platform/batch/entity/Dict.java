@@ -23,7 +23,7 @@ public class Dict implements Serializable {
 	 * 主键
 	 */
 	@JsonSerialize(using = ToStringSerializer.class)
-	@TableId(value = "id", type = IdType.AUTO)
+	@TableId(value = "id", type = IdType.ASSIGN_ID)
 	private Long id;
 
 	/**
