@@ -1,11 +1,10 @@
-/*
 package com.plm.platform.batch.strategy.keygen;
 
 import com.plm.platform.batch.service.impl.SnowflakeService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import org.apache.shardingsphere.spi.keygen.ShardingKeyGenerator;
+import org.apache.shardingsphere.sharding.spi.KeyGenerateAlgorithm;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -13,13 +12,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
-*/
 /**
  * @author crystal
- *//*
-
+ */
 @Component
-public final class LeafSnowflakeKeyGenerator implements ShardingKeyGenerator, ApplicationContextAware {
+public final class LeafSnowflakeKeyGenerateAlgorithm implements KeyGenerateAlgorithm, ApplicationContextAware {
 
     @Getter
     @Setter
@@ -42,5 +39,9 @@ public final class LeafSnowflakeKeyGenerator implements ShardingKeyGenerator, Ap
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         snowflakeService = applicationContext.getBean(SnowflakeService.class);
     }
+
+    @Override
+    public void init() {
+
+    }
 }
-*/

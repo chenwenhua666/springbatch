@@ -1,4 +1,3 @@
-/*
 package com.plm.platform.batch.configure;
 
 import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
@@ -7,8 +6,6 @@ import com.baomidou.dynamic.datasource.provider.DynamicDataSourceProvider;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
-import org.apache.shardingsphere.shardingjdbc.jdbc.adapter.AbstractDataSourceAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
@@ -20,37 +17,19 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Map;
 
-
-*/
 /**
  * @author crystal
- *//*
-
-
+ */
 @Configuration
 @AutoConfigureBefore({DynamicDataSourceAutoConfiguration.class, SpringBootConfiguration.class})
-public class DataSourceConfiguration {
-
-
-    // 分表数据源名称
-    private static final String SHARDING_DATA_SOURCE_NAME = "sharding";
-
+public class PlatformDataSourceConfiguration {
     @Resource
     private DynamicDataSourceProperties properties;
 
-    */
-/**
-     * shardingjdbc有四种数据源，需要根据业务注入不同的数据源
-     *
-     * <p>1. 未使用分片, 脱敏的名称(默认): shardingDataSource;
-     * <p>2. 主从数据源: masterSlaveDataSource;
-     * <p>3. 脱敏数据源：encryptDataSource;
-     * <p>4. 影子数据源：shadowDataSource
-     *//*
-
+    //建议springboot2.5.0 以下版本或者发现不加@Lazy值是null的情况都打开@Lazy
     @Lazy
-    @Resource(name = "shardingDataSource")
-    AbstractDataSourceAdapter shardingDataSource;
+    @Resource
+    private DataSource shardingSphereDataSource;
 
     @Bean
     public DynamicDataSourceProvider dynamicDataSourceProvider() {
@@ -59,19 +38,12 @@ public class DataSourceConfiguration {
             @Override
             public Map<String, DataSource> loadDataSources() {
                 Map<String, DataSource> dataSourceMap = createDataSourceMap(datasourceMap);
-                // 将 shardingjdbc 管理的数据源也交给动态数据源管理
-                dataSourceMap.put(SHARDING_DATA_SOURCE_NAME, shardingDataSource);
+                //把shardingSphereDataSource 加入多数据源，到时候使用的时候就可以@DS("shardingSphere")
+                dataSourceMap.put("shardingSphere", shardingSphereDataSource);
                 return dataSourceMap;
             }
         };
     }
-
-    */
-/**
-     * 将动态数据源设置为首选的
-     * 当spring存在多个数据源时, 自动注入的是首选的对象
-     * 设置为主要的数据源之后，就可以支持shardingjdbc原生的配置方式了
-     *//*
 
     @Primary
     @Bean
@@ -85,6 +57,4 @@ public class DataSourceConfiguration {
         dataSource.setSeata(properties.getSeata());
         return dataSource;
     }
-
 }
-*/

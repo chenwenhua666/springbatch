@@ -15,5 +15,5 @@
 # limitations under the License.
 #
 
-#com.plm.platform.batch.strategy.keygen.LeafSegmentKeyGenerator
-#com.plm.platform.batch.strategy.keygen.LeafSnowflakeKeyGenerator
+com.plm.platform.batch.strategy.keygen.LeafSegmentKeyGenerateAlgorithm
+com.plm.platform.batch.strategy.keygen.LeafSnowflakeKeyGenerateAlgorithm

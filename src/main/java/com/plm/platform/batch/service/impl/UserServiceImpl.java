@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @author crystal
  */
-@DS("sharding")
+@DS("shardingSphere")
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 

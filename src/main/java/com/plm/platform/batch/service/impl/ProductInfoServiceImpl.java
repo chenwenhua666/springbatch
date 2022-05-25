@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author crystal
  */
-@DS("sharding")
+@DS("shardingSphere")
 @Service
 public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, ProductInfo> implements ProductInfoService {
     @Override

@@ -22,7 +22,8 @@
         <sharding-shardingsphere.version>5.1.1</sharding-shardingsphere.version>
         <xstream.version>1.4.11.1</xstream.version>
         <leaf-core.version>1.0.1</leaf-core.version>
-        <curator.version>2.6.0</curator.version>
+        <curator.version>5.1.0</curator.version>
+        <guava.version>30.0-jre</guava.version>
     </properties>
     <dependencies>
         <dependency>
@@ -83,18 +84,18 @@
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
             <version>${mybatis-plus.dynamic.version}</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
             <version>${sharding-jdbc.version}</version>
         </dependency>
-        <!--
+        -->
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
             <version>${sharding-shardingsphere.version}</version>
         </dependency>
-        -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
@@ -126,6 +127,11 @@
                     <groupId>log4j</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>guava</artifactId>
+            <groupId>com.google.guava</groupId>
+            <version>${guava.version}</version>
         </dependency>
     </dependencies>
 

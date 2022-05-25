@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author crystal
  */
-@DS("sharding")
+@DS("shardingSphere")
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 }

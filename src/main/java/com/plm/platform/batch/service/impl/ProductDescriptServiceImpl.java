@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author crystal
  */
-@DS("sharding")
+@DS("shardingSphere")
 @Service
 public class ProductDescriptServiceImpl extends ServiceImpl<ProductDescriptMapper, ProductDescript> implements ProductDescriptService {
 }

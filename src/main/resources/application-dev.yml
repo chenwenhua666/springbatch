@@ -41,9 +41,18 @@ spring:
           password: 123456
 
   shardingsphere:
+#    mode:
+#      type: Cluster
+#      repository:
+#        type: ZooKeeper
+#        props:
+#          namespace: demo_spring_boot_ds_sharding
+#          server-lists: localhost:2181
+#      overwrite: true
+    mode:
+      type: Memory
     props:
-      sql:
-        show: true
+      sql-show: true
     datasource:
       names: ds,ds-slave1,ds1,ds2
       ds:
@@ -71,35 +80,68 @@ spring:
         url: jdbc:mysql://127.0.0.1:3306/springbatch2?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: 123456
-    sharding:
-      tables:
-        t_order:
-#          actual-data-nodes: m1.t_order_$->{1..2}
-          actual-data-nodes: ds$->{1..2}.t_order_$->{1..2}
-          key-generator:
-            column: order_id
-#            type: SNOWFLAKE
+    rules:
+      sharding:
+        tables:
+          t_order:
+            actual-data-nodes: ds$->{1..2}.t_order_$->{1..2}
+            key-generate-strategy:
+              column: order_id
+              key-generator-name: leaf-segment
+              #key-generator-name: leaf-snowflake
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: database-t-order-inline
+            table-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: table-t-order-inline
+          t_user:
+            actual-data-nodes: readwrite_ds.t_user
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: table-t-user-inline
+
+        sharding-algorithms:
+          database-t-order-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{user_id % 2 + 1}
+          table-t-order-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_$->{order_id % 2 + 1}
+              allow-range-query-with-inline-sharding: true
+          table-t-user-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_user
+              allow-range-query-with-inline-sharding: true
+        key-generators:
+          leaf-segment:
             type: leafSegment
             props:
               biz-tag: leaf-segment-test
-          database-strategy:
-            inline:
-              sharding-column: user_id
-              algorithm-expression: ds$->{user_id % 2 + 1}
-          table-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: t_order_$->{order_id % 2 + 1}
-        t_user:
-#          actual-data-nodes: ds.t_user
-          actual-data-nodes: ms1.t_user
-          table-strategy:
-            inline:
-              sharding-column: user_id
-              algorithm-expression: t_user
-      broadcast-tables: t_dict
-      master-slave-rules:
-        ms1:
-          master-data-source-name: ds
-          slave-data-source-names: ds-slave1
+          leaf-snowflake:
+            type: leafSnowflake
 
+        broadcast-tables: t_dict
+
+      readwrite-splitting:
+        data-sources:
+          readwrite_ds:
+            type: Static
+            props:
+              write-data-source-name: ds
+              read-data-source-names: ds-slave1
+            load-balancer-name: round_robin
+        load-balancers:
+          round_robin:
+            type: ROUND_ROBIN
+
+logging:
+  level:
+    com.baomidou: debug
+    org.apache.shardingsphere: debug
