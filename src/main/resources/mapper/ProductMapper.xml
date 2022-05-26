@@ -3,13 +3,13 @@
 <mapper namespace="com.plm.platform.batch.mapper.ProductInfoMapper">
     <select id="findProductDetail" resultType="java.util.Map">
         select i.*, d.descript, r.region_name placeOfOrigin
-        from product_info i join product_descript d on i.product_info_id = d.product_info_id
+        from t_product_info i join t_product_descript d on i.product_info_id = d.product_info_id
         join t_region r on r.region_code = i.region_code order by i.product_info_id desc limit #{start},#{pageSize}
     </select>
 
     <select id="findProductDetailByPage" resultType="java.util.Map">
         select i.*, d.descript, r.region_name
-        from product_info i, product_descript d, t_region r where i.product_info_id = d.product_info_id
+        from t_product_info i, t_product_descript d, t_region r where i.product_info_id = d.product_info_id
         and r.region_code = i.region_code order by i.product_info_id desc
     </select>
 
@@ -20,7 +20,7 @@
     SELECT name, SUM(score) FROM t_score GROUP BY name ORDER BY name;
     -->
     <select id="findProductGroupList" resultType="java.util.Map">
-        select region_code, count(1) as num from product_info group by region_code having num>1 ORDER BY
+        select region_code, count(1) as num from t_product_info group by region_code having num>1 ORDER BY
         region_code ASC
     </select>
 </mapper>

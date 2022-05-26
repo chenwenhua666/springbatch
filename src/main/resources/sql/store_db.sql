@@ -20,8 +20,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for store_info
 -- ----------------------------
-DROP TABLE IF EXISTS `store_info`;
-CREATE TABLE `store_info`  (
+DROP TABLE IF EXISTS `t_store_info`;
+CREATE TABLE `t_store_info`  (
   `id` bigint(20) NOT NULL COMMENT 'id',
   `store_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '店铺名称',
   `reputation` int(11) NULL DEFAULT NULL COMMENT '信誉等级',

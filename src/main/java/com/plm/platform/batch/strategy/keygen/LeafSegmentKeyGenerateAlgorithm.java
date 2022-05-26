@@ -8,7 +8,6 @@ import org.apache.shardingsphere.sharding.spi.KeyGenerateAlgorithm;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Properties;
@@ -16,7 +15,6 @@ import java.util.Properties;
 /**
  * @author crystal
  */
-@Component
 public final class LeafSegmentKeyGenerateAlgorithm implements KeyGenerateAlgorithm, ApplicationContextAware {
 
     private static SegmentService segmentService;
@@ -25,7 +23,7 @@ public final class LeafSegmentKeyGenerateAlgorithm implements KeyGenerateAlgorit
 
     @Getter
     @Setter
-    private Properties properties = new Properties();
+    private Properties props = new Properties();
 
     @Override
     public String getType() {
@@ -44,7 +42,7 @@ public final class LeafSegmentKeyGenerateAlgorithm implements KeyGenerateAlgorit
 
     @Override
     public void init() {
-        bizTag = getProps().getProperty("biz-tag", "leaf-segment-test");
+        bizTag = props.getProperty("biz-tag");
         Preconditions.checkArgument(!StringUtils.isEmpty(bizTag));
     }
 }

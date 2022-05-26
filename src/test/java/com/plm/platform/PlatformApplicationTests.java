@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.plm.platform.batch.entity.*;
 import com.plm.platform.batch.service.*;
+import com.plm.platform.batch.service.impl.SegmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,10 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.baomidou.mybatisplus.core.toolkit.Wrappers.lambdaQuery;
 
@@ -46,6 +44,9 @@ class PlatformApplicationTests {
 
     @Autowired
     private StoreInfoService storeInfoService;
+
+    @Autowired
+    private SegmentService segmentService;
 
 
     @Test
@@ -109,6 +110,19 @@ class PlatformApplicationTests {
     public void queryUser2() {
         List<Map> result = userService.findUserInfoByIds("user_type", Arrays.asList(1L, 2L, 3L));
         log.info("结果={}", result);
+    }
+
+    @Test
+    public void testInsertRegison() {
+        for (int i = 0; i < 10; i++) {
+            Region region = new Region();
+            region.setId(segmentService.getId("springbatch").getId());
+            region.setLevel(1);
+            region.setRegionCode(UUID.randomUUID().toString().replaceAll("-", ""));
+            region.setRegionName(UUID.randomUUID().toString().replaceAll("-", ""));
+            region.setParentRegionCode("0");
+            regionService.save(region);
+        }
     }
 
     @Test

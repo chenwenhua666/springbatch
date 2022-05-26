@@ -8,19 +8,17 @@ import org.apache.shardingsphere.sharding.spi.KeyGenerateAlgorithm;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
 /**
  * @author crystal
  */
-@Component
 public final class LeafSnowflakeKeyGenerateAlgorithm implements KeyGenerateAlgorithm, ApplicationContextAware {
 
     @Getter
     @Setter
-    private Properties properties = new Properties();
+    private Properties props = new Properties();
 
     private static SnowflakeService snowflakeService;
 

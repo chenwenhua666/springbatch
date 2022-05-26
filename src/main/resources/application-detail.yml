@@ -41,108 +41,97 @@ spring:
           password: 123456
 
   shardingsphere:
-#    mode:
-#      type: Cluster
-#      repository:
-#        type: ZooKeeper
-#        props:
-#          namespace: demo_spring_boot_ds_sharding
-#          server-lists: localhost:2181
-#      overwrite: true
     mode:
       type: Memory
     props:
       sql-show: true
     datasource:
-      names: ds,ds-slave1,ds1,ds2
-      ds:
+      names: ds0,ds1,ds2
+      ds0:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/user_db?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-        username: root
-        password: 123456
-      ds-slave1:
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/user_db_s1?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://127.0.0.1:3306/store_db?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: 123456
       ds1:
-        #type: com.zaxxer.hikari.HikariDataSource
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/springbatch1?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://127.0.0.1:3306/product_db_1?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: 123456
       ds2:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3306/springbatch2?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://127.0.0.1:3306/product_db_2?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: 123456
+
     rules:
       sharding:
         tables:
-          t_order:
-            actual-data-nodes: ds$->{1..2}.t_order_$->{1..2}
+          t_region:
+            actual-data-nodes: ds$->{0..2}.t_region
+          t_store_info:
+            actual-data-nodes: ds$->{0}.t_store_info
+          t_product_info:
+            actual-data-nodes: ds$->{1..2}.t_product_info_$->{1..2}
             key-generate-strategy:
-              column: order_id
-              key-generator-name: leaf-segment
-              #key-generator-name: leaf-snowflake
+              column: product_info_id
+              key-generator-name: leaf-segment1
             database-strategy:
               standard:
-                sharding-column: user_id
-                sharding-algorithm-name: database-t-order-inline
+                sharding-column: store_info_id
+                sharding-algorithm-name: database-product-info-inline
             table-strategy:
               standard:
-                sharding-column: order_id
-                sharding-algorithm-name: table-t-order-inline
-          t_user:
-            actual-data-nodes: readwrite_ds.t_user
+                sharding-column: product_info_id
+                sharding-algorithm-name: table-product-info-inline
+          t_product_descript:
+            actual-data-nodes: ds$->{1..2}.t_product_descript_$->{1..2}
+            key-generate-strategy:
+              column: id
+              key-generator-name: leaf-segment2
+            database-strategy:
+              standard:
+                sharding-column: store_info_id
+                sharding-algorithm-name: database-product-descript-inline
             table-strategy:
               standard:
-                sharding-column: user_id
-                sharding-algorithm-name: table-t-user-inline
+                sharding-column: product_info_id
+                sharding-algorithm-name: table-product-descript-inline
 
         sharding-algorithms:
-          database-t-order-inline:
+          database-product-info-inline:
             type: INLINE
             props:
-              algorithm-expression: ds$->{user_id % 2 + 1}
-          table-t-order-inline:
+              algorithm-expression: ds$->{store_info_id % 2 + 1}
+          database-product-descript-inline:
             type: INLINE
             props:
-              algorithm-expression: t_order_$->{order_id % 2 + 1}
-              allow-range-query-with-inline-sharding: true
-          table-t-user-inline:
+              algorithm-expression: ds$->{store_info_id % 2 + 1}
+          table-product-info-inline:
             type: INLINE
             props:
-              algorithm-expression: t_user
-              allow-range-query-with-inline-sharding: true
+              algorithm-expression: t_product_info_$->{product_info_id % 2 + 1}
+          table-product-descript-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_product_descript_$->{product_info_id % 2 + 1}
         key-generators:
-          leaf-segment:
+          snowflake:
+            type: SNOWFLAKE
+          leaf-segment1:
             type: leafSegment
             props:
               biz-tag: leaf-segment-test
+          leaf-segment2:
+            type: leafSegment
+            props:
+              biz-tag: leaf-segment-test2
           leaf-snowflake:
             type: leafSnowflake
 
         broadcast-tables:
-          - t_dict
-
-      readwrite-splitting:
-        data-sources:
-          readwrite_ds:
-            type: Static
-            props:
-              write-data-source-name: ds
-              read-data-source-names: ds-slave1
-            load-balancer-name: round_robin
-        load-balancers:
-          round_robin:
-            type: ROUND_ROBIN
-
-logging:
-  level:
-    com.baomidou: debug
-    org.apache.shardingsphere: debug
+          - t_region
+        binding-tables:
+          - t_product_info,t_product_descript

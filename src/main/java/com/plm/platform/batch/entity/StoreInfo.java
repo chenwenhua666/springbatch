@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author crystal
  */
 @Data
-@TableName("store_info")
+@TableName("t_store_info")
 public class StoreInfo implements Serializable {
     @TableId
     private Long id;

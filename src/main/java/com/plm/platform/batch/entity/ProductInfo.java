@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @author crystal
  */
 @Data
-@TableName("product_info")
+@TableName("t_product_info")
 public class ProductInfo implements Serializable {
 
     @TableId
